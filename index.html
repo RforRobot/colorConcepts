@@ -30,6 +30,19 @@
               <td>
                   <button id="red" style="background: red">Drain red color</button>
               </td>
+              <td>
+                  Hue:
+              </td>
+              <td>
+                 <output id="pixHue"></output>
+              </td>
+              <td align="right">
+                 <button id="hueShift" style="background-image: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet)">Shift hue by value:</button>
+              </td>
+              <td>
+                <input id="hueInput" value="0" type="number" step="1" min="0" max="360"></output>
+             </td>
+
           </tr>
           <tr>
               <td>
@@ -41,6 +54,18 @@
               <td>
                   <button id="green" style="background: green">Drain green color</button>
               </td>
+              <td>
+                 Saturation:
+              </td>
+              <td>
+                 <output id="pixSat"></output>
+              </td>
+              <td align="right">
+                <button id="satShift" style="background-image: linear-gradient(to right,rgb(128,128,128),rgb(96,96,160),rgb(64,64,192),rgb(32,32,223),rgb(0,0,255))">Shift saturation by value:</button>
+             </td>
+             <td>
+                <input id="satInput" value="0" type="number" step="1" min="-100" max="100"></output>
+             </td>
           </tr>
           <tr>
               <td>
@@ -52,6 +77,19 @@
               <td>
                   <button id="blue" style="background: blue">Drain blue color</button>
               </td>
+              <td>
+                  Light:
+              </td>
+              <td>
+                  <output id="pixLight"></output>
+              </td>
+              <td align="right">
+                <button id="lightShift" style="background-image: linear-gradient(to left,white,lightgray,darkgray,gray,black)">Shift light by value:</button>
+             </td>
+             <td>
+                <input id="lightInput" value="0" type="number" step="1" min="-100" max="100"
+                ></output>
+             </td>
           </tr>
       </table>
       <br>
@@ -65,4 +103,5 @@
   <script src="events.js"></script>
   <script src="imgLoad.js"></script>
   <script src="pixelCanvas.js"></script>
+  <script src="HSL.js"></script>
 </html>

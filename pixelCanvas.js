@@ -31,6 +31,12 @@ function getPixelColor(pixelIndex,_canvas) {
     pixelGreen.value = data[pixelIndex + 1];
     pixelBlue.value = data[pixelIndex + 2];
 
+    var hsl = RGB2HSL(pixelRed.value, pixelGreen.value, pixelBlue.value);
+
+    pixHue.value = +hsl.h.toFixed(2);
+    pixSat.value = +hsl.s.toFixed(2);
+    pixLight.value = +hsl.l.toFixed(2);
+
     var pcCtx = pixelCanvas.getContext('2d');
 
     var pcImageData = pcCtx.getImageData(0, 0, pixelCanvas.width, pixelCanvas.height);
