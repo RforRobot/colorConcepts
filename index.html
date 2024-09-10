@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Basic image manipulation</title>
+    <link rel="stylesheet" href="myStyle.css">
+  </head>
+  <body>
+      Upload an image file using this button:
+      <br>
+      <input type="file" id="input" onchange="reset()" />
+      <br>
+      (images larger than 480x360 will be cropped)
+      <br><br>
+      <button id="reload" style="color: black">Reload original image</button> 
+      <button id="gray" style="background: gray">Grayscale</button> 
+      <button id="decomp" style="color: black">Decompose</button>
+      <br><br>
+      <table>
+          <tr>
+              <td rowspan="3">
+                  <canvas id="pixelWindow" width="80" height="80"></canvas>
+              </td>
+              <td>
+                  Red:
+              </td>
+              <td>
+                  <output id="pixR"></output>
+              </td>
+              <td>
+                  <button id="red" style="background: red">Drain red color</button>
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  Green:
+              </td>
+              <td>
+                  <output id="pixG"></output>
+              </td>
+              <td>
+                  <button id="green" style="background: green">Drain green color</button>
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  Blue:
+              </td>
+              <td>
+                  <output id="pixB"></output>
+              </td>
+              <td>
+                  <button id="blue" style="background: blue">Drain blue color</button>
+              </td>
+          </tr>
+      </table>
+      <br>
+      Try clicking in the image below:
+      <br>
+      <canvas id="imgWindow" width="480" height="360"></canvas>       <canvas id="imgWindow2" width="480" height="360"></canvas>
+      <br>
+      <canvas id="imgWindow3" width="480" height="360"></canvas>       <canvas id="imgWindow4" width="480" height="360"></canvas>
+  </body>
+  <script src="img4Script.js"></script>
+</html>
