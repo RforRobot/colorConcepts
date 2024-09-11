@@ -21,6 +21,8 @@ const pixelSat = document.getElementById('pixSat');
 const pixelLight = document.getElementById('pixLight');
 
 // Buttons
+const buttonRainbow = document.getElementById('rainbow');
+
 const buttonGray = document.getElementById('gray');
 
 const buttonDecomp = document.getElementById('decomp');

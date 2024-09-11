@@ -5,6 +5,8 @@ for(var i = 0; i < canvasLst.length; i++) {
     })    
 }
 
+buttonRainbow.addEventListener("click", drawRainbow);
+
 buttonGray.addEventListener("click", grayScale);
 
 buttonDecomp.addEventListener("click", decomposeImg);
@@ -35,8 +37,42 @@ for(var i = 0; i < canvasLst.length; i++) {
     dataLst.push(imageDataLst[i].data);
 }
 
-
 // functions 
+function drawRainbow() {
+
+    console.log("data length: " + dataLst[0].length);
+
+    console.log("ch: " + canvasLst[0].height);
+
+    console.log("cw: " + canvasLst[0].width);
+
+
+
+    for(var yi = 0; yi < canvasLst[0].height; yi++ )
+    {
+        for(var xi = 0; xi < canvasLst[0].width; xi++ )
+        {
+            var pixelIndex = 4 * (canvasLst[0].width * yi + xi);
+
+            var h = xi % 360;
+            var s = 100;
+            var l = 50;
+
+            var rgbPixel = HSL2RGB(h,s,l);
+
+            dataLst[0][pixelIndex + 0] = rgbPixel.r;
+            dataLst[0][pixelIndex + 1] = rgbPixel.g;
+            dataLst[0][pixelIndex + 2] = rgbPixel.b;
+            dataLst[0][pixelIndex + 3] = 255;
+
+
+        }        
+    }
+
+    contextLst[0].putImageData(imageDataLst[0], 0, 0);
+
+}
+
 function grayScale() {
 
     var imageData = contextLst[0].getImageData(0, 0, canvasLst[0].width, canvasLst[0].height);
