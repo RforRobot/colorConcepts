@@ -40,14 +40,6 @@ for(var i = 0; i < canvasLst.length; i++) {
 // functions 
 function drawRainbow() {
 
-    console.log("data length: " + dataLst[0].length);
-
-    console.log("ch: " + canvasLst[0].height);
-
-    console.log("cw: " + canvasLst[0].width);
-
-
-
     for(var yi = 0; yi < canvasLst[0].height; yi++ )
     {
         for(var xi = 0; xi < canvasLst[0].width; xi++ )
@@ -64,7 +56,6 @@ function drawRainbow() {
             dataLst[0][pixelIndex + 1] = rgbPixel.g;
             dataLst[0][pixelIndex + 2] = rgbPixel.b;
             dataLst[0][pixelIndex + 3] = 255;
-
 
         }        
     }
@@ -95,6 +86,10 @@ function grayScale() {
 
     contextLst[0].putImageData(imageData, 0, 0);
 
+    if(lastCanvas == canvasLst[0]) {
+        getPixelColor(lastPixel,lastCanvas);
+    }
+
 }
 
 function drainColorR() {
@@ -124,6 +119,10 @@ function drainColor(color) {
     }
 
     contextLst[0].putImageData(imageData, 0, 0);
+
+    if(lastCanvas == canvasLst[0]) {
+        getPixelColor(lastPixel,lastCanvas);
+    }
 
     //console.log("End color drain");
 }
@@ -170,6 +169,10 @@ function HSLshift(hueShift,satShift,lightShift) {
     }
 
     contextLst[0].putImageData(imageData, 0, 0);
+
+    if(lastCanvas == canvasLst[0]) {
+        getPixelColor(lastPixel,lastCanvas);
+    }
 
 }
 
