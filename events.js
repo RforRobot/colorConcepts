@@ -1,8 +1,8 @@
 // Listeners
-for(var i = 0; i < canvasLst.length; i++) {
+for (var i = 0; i < canvasLst.length; i++) {
     canvasLst[i].addEventListener('mousedown', function (e) {
         getCursorPosition(e)
-    })    
+    })
 }
 
 buttonRainbow.addEventListener("click", drawRainbow);
@@ -31,7 +31,7 @@ var imageDataLst = [];
 var dataLst = [];
 
 
-for(var i = 0; i < canvasLst.length; i++) {
+for (var i = 0; i < canvasLst.length; i++) {
     contextLst.push(canvasLst[i].getContext('2d'));
     imageDataLst.push(contextLst[i].getImageData(0, 0, canvasLst[i].width, canvasLst[i].height));
     dataLst.push(imageDataLst[i].data);
@@ -40,24 +40,116 @@ for(var i = 0; i < canvasLst.length; i++) {
 // functions 
 function drawRainbow() {
 
-    for(var yi = 0; yi < canvasLst[0].height; yi++ )
-    {
-        for(var xi = 0; xi < canvasLst[0].width; xi++ )
-        {
+    // calculate an HSL band:
+    var rgbPixels = [];
+
+    for (var xi = 0; xi < canvasLst[0].width; xi++) {
+
+        var h = xi % 360;
+        var s = 100;
+        var l = 50;
+
+        var rgbPixel = HSL2RGB(h, s, l);
+        rgbPixels.push(rgbPixel);
+
+    }
+
+
+
+    // extend to canvas
+    for (var yi = 0; yi < canvasLst[0].height; yi++) {
+
+        for (var xi = 0; xi < canvasLst[0].width; xi++) {
+
+            var rgbPixel = rgbPixels[xi];
             var pixelIndex = 4 * (canvasLst[0].width * yi + xi);
-
-            var h = xi % 360;
-            var s = 100;
-            var l = 50;
-
-            var rgbPixel = HSL2RGB(h,s,l);
 
             dataLst[0][pixelIndex + 0] = rgbPixel.r;
             dataLst[0][pixelIndex + 1] = rgbPixel.g;
             dataLst[0][pixelIndex + 2] = rgbPixel.b;
             dataLst[0][pixelIndex + 3] = 255;
+        }
+    }
 
-        }        
+
+    // y limits for bands:
+    var yLim = [0];
+
+    var colorBandSize = 4;
+    var blackBandSize = 1;
+    var totalSize = 7 * colorBandSize + 6 * blackBandSize;
+
+    var yLimLast = 0;
+
+    for (var i = 0; i <= totalSize; i += 2) {
+
+        yLimLast = Math.floor(yLimLast + colorBandSize / totalSize * canvasLst[0].height) 
+        yLim.push(yLimLast);
+
+        yLimLast = Math.floor(yLimLast + blackBandSize / totalSize * canvasLst[0].height);
+        yLim.push(yLimLast);
+    }
+
+    for (var xi = 0; xi < canvasLst[0].width; xi++) {
+
+        var rgbPixel = rgbPixels[xi];
+
+        // red band overwrite
+        for (var yi = yLim[0]; yi < yLim[1]; yi++) {
+
+            var pixelIndex = 4 * (canvasLst[0].width * yi + xi);
+
+            dataLst[0][pixelIndex + 1] = 0;
+            dataLst[0][pixelIndex + 2] = 0;
+
+        }
+
+        // green band overwrite
+
+        for (var yi = yLim[4]; yi < yLim[5]; yi++) {
+
+            var pixelIndex = 4 * (canvasLst[0].width * yi + xi);
+
+            dataLst[0][pixelIndex + 0] = 0;
+            dataLst[0][pixelIndex + 2] = 0;
+
+        }
+
+        // blue band overwrite
+
+        for (var yi = yLim[8]; yi < yLim[9]; yi++) {
+
+            var pixelIndex = 4 * (canvasLst[0].width * yi + xi);
+
+            dataLst[0][pixelIndex + 0] = 0;
+            dataLst[0][pixelIndex + 1] = 0;
+
+        }
+
+        // 2nd red band overwrite
+        for (var yi = yLim[12]; yi < yLim[13]; yi++) {
+
+            var pixelIndex = 4 * (canvasLst[0].width * yi + xi);
+
+            dataLst[0][pixelIndex + 1] = 0;
+            dataLst[0][pixelIndex + 2] = 0;
+
+        }
+
+        // black bands
+        for (var i = 1; i < yLim.length; i += 2) {
+
+            for (var yi = yLim[i]; yi < yLim[i + 1]; yi++) {
+
+                var pixelIndex = 4 * (canvasLst[0].width * yi + xi);
+
+                dataLst[0][pixelIndex + 0] = 0;
+                dataLst[0][pixelIndex + 1] = 0;
+                dataLst[0][pixelIndex + 2] = 0;
+
+            }
+        }
+
     }
 
     contextLst[0].putImageData(imageDataLst[0], 0, 0);
@@ -69,16 +161,16 @@ function grayScale() {
     var imageData = contextLst[0].getImageData(0, 0, canvasLst[0].width, canvasLst[0].height);
 
     var data = imageData.data;
-    
 
-    for(var i=0;i<30;i++) console.log(data[i]);
+
+    for (var i = 0; i < 30; i++) console.log(data[i]);
 
 
     var grayness;
 
     for (var i = 0; i < data.length; i += 4) {
 
-        grayness = (data[i + 0] + data[i + 1] + data[i + 2])/3;
+        grayness = (data[i + 0] + data[i + 1] + data[i + 2]) / 3;
         data[i + 0] = grayness;
         data[i + 1] = grayness;
         data[i + 2] = grayness;
@@ -86,8 +178,8 @@ function grayScale() {
 
     contextLst[0].putImageData(imageData, 0, 0);
 
-    if(lastCanvas == canvasLst[0]) {
-        getPixelColor(lastPixel,lastCanvas);
+    if (lastCanvas == canvasLst[0]) {
+        getPixelColor(lastPixel, lastCanvas);
     }
 
 }
@@ -120,26 +212,26 @@ function drainColor(color) {
 
     contextLst[0].putImageData(imageData, 0, 0);
 
-    if(lastCanvas == canvasLst[0]) {
-        getPixelColor(lastPixel,lastCanvas);
+    if (lastCanvas == canvasLst[0]) {
+        getPixelColor(lastPixel, lastCanvas);
     }
 
     //console.log("End color drain");
 }
 
 function shiftHue() {
-    HSLshift(Number(inputHue.value),0,0);
+    HSLshift(Number(inputHue.value), 0, 0);
 }
 
 function shiftSat() {
-    HSLshift(0,Number(inputSat.value),0);
+    HSLshift(0, Number(inputSat.value), 0);
 }
 
 function shiftLight() {
-    HSLshift(0,0,Number(inputLight.value));
+    HSLshift(0, 0, Number(inputLight.value));
 }
 
-function HSLshift(hueShift,satShift,lightShift) {
+function HSLshift(hueShift, satShift, lightShift) {
 
     // console.log("HLSshift called, with (hueShift,satShift,lightShift)" 
     // + hueShift + "," + satShift + "," + lightShift);
@@ -149,12 +241,12 @@ function HSLshift(hueShift,satShift,lightShift) {
     var data = imageData.data;
 
     for (var i = 0; i < data.length; i += 4) {
-        var pixel = {r: data[i + 0], g: data[i + 1], b: data[i + 2]};
+        var pixel = { r: data[i + 0], g: data[i + 1], b: data[i + 2] };
         var HSLpixel = RGB2HSL(pixel.r, pixel.g, pixel.b);
 
         HSLpixel.h = (HSLpixel.h + hueShift) % 360;
-        HSLpixel.s = Math.min(100,Math.max(0,HSLpixel.s + satShift));
-        HSLpixel.l = Math.min(100,Math.max(0,HSLpixel.l + lightShift));
+        HSLpixel.s = Math.min(100, Math.max(0, HSLpixel.s + satShift));
+        HSLpixel.l = Math.min(100, Math.max(0, HSLpixel.l + lightShift));
 
         // if( i % 1000 == 0) console.log("pix:"
         // + pixel.r + "," + pixel.g + "," + pixel.b);
@@ -170,8 +262,8 @@ function HSLshift(hueShift,satShift,lightShift) {
 
     contextLst[0].putImageData(imageData, 0, 0);
 
-    if(lastCanvas == canvasLst[0]) {
-        getPixelColor(lastPixel,lastCanvas);
+    if (lastCanvas == canvasLst[0]) {
+        getPixelColor(lastPixel, lastCanvas);
     }
 
 }
@@ -181,14 +273,14 @@ function decomposeImg() {
     console.log('Start decompose');
 
     var imageData = contextLst[0].getImageData(0, 0, canvasLst[0].width, canvasLst[0].height);
-    
+
     var data = imageData.data;
-   
+
     // clear other canvases
-    for (var i = 0; i < data.length; i ++) {
+    for (var i = 0; i < data.length; i++) {
         dataLst[1][i] = 0;
         dataLst[2][i] = 0;
-        dataLst[3][i] = 0;      
+        dataLst[3][i] = 0;
     }
 
 
@@ -197,14 +289,14 @@ function decomposeImg() {
         dataLst[1][i + 0] = data[i + 0]; // R value
         dataLst[2][i + 1] = data[i + 1]; // G value
         dataLst[3][i + 2] = data[i + 2]; // B value
-        
+
         dataLst[1][i + 3] = data[i + 3]; // A value <- Alpha, transparency 
         dataLst[2][i + 3] = data[i + 3]; // A value <- Alpha, transparency 
         dataLst[3][i + 3] = data[i + 3]; // A value <- Alpha, transparency 
     }
- 
 
-    for(var i=1; i<canvasLst.length; i++) {
+
+    for (var i = 1; i < canvasLst.length; i++) {
         contextLst[i].putImageData(imageDataLst[i], 0, 0);
     }
 
