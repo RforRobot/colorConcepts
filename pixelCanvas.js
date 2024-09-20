@@ -6,13 +6,13 @@ function getCursorPosition(event) {
     
     lastCanvas = event.target;
 
-    const rect = lastCanvas.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
+    const rect = lastCanvas.getBoundingClientRect();
+    const x = Math.floor(event.clientX - rect.left);
+    const y = Math.floor(event.clientY - rect.top);
 
-    console.log("x: " + x + " y: " + y)        
+    console.log("x: " + x + " y: " + y);        
 
-    var pixelIndex = 4 * (lastCanvas.width * y + x)
+    var pixelIndex = 4 * (lastCanvas.width * y + x);
     
     lastPixel = pixelIndex;
     
